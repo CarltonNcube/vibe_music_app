@@ -1,207 +1,223 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
 
-    /* General Reset */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Arial', sans-serif;
-    }
+body {
+    color: #fff;
+    background-color: #121212;
+    display: flex;
+    height: 100vh;
+}
 
-    body {
-        color: #fff;
-        background-color: #121212;
-        display: flex;
-        height: 100vh;
-    }
+/* Sidebar Styles */
+.sidebar {
+    background: linear-gradient(135deg, #FF6EC7, #3498DB, #8E44AD); /* Gradient background */
+    width: 250px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
 
-    /* Sidebar Styles */
-    .sidebar {
-        background-color: #000;
-        width: 240px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-    }
+/* Content Styles */
+.content {
+    flex-grow: 1;
+    overflow-y: auto;
+}
 
-    /* Content Styles */
-    .content {
-        flex-grow: 1;
-        overflow-y: auto;
-    }
+/* Player Styles */
+.player {
+    background-color: #181818;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    color: #b3b3b3;
+}
 
-    /* Player Styles */
-    .player {
-        background-color: #181818;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        height: 90px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20px;
-    }
+/* Header Styles */
+header {
+    background-color: #181818;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
 
-    /* Header Styles */
-    header {
-        background-color: #181818;
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-    }
+/* Section Styles */
+section {
+    margin: 20px;
+}
 
-    /* Section Styles */
-    section {
-        margin: 20px;
-    }
+/* Card Styles */
+.card {
+    display: inline-block;
+    background-color: #282828;
+    margin-right: 20px;
+    border-radius: 4px;
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
 
-    /* Card Styles */
-    .card {
-        display: inline-block;
-        background-color: #282828;
-        margin-right: 20px;
-        border-radius: 4px;
-        width: 200px;
-        height: 200px;
-        background-size: cover;
-        background-position: center;
-        position: relative;
-    }
+.card .title {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    font-size: 16px;
+}
 
-    .card .title {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        color: white;
-        font-size: 16px;
-    }
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 12px;
+}
 
-    /* Scrollbar Styles */
-    ::-webkit-scrollbar {
-        width: 12px;
-    }
+::-webkit-scrollbar-track {
+    background: #0e0e0e;
+}
 
-    ::-webkit-scrollbar-track {
-        background: #0e0e0e;
-    }
+::-webkit-scrollbar-thumb {
+    background-color: #ffffff;
+    border-radius: 20px;
+    border: 3px solid #0e0e0e;
+}
 
-    ::-webkit-scrollbar-thumb {
-        background-color: #ffffff;
-        border-radius: 20px;
-        border: 3px solid #0e0e0e;
-    }
+/* Navigation Sidebar Styles */
+.sidebar a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 5px 15px;
+    margin: 10px 0;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
 
-    /* Navigation Sidebar Styles */
-    .sidebar {
-        color: #b3b3b3;
-        padding: 25px 10px;
-        font-size: 14px;
-    }
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
 
-    .sidebar a {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-        padding: 5px 15px;
-        margin: 10px 0;
-        border-radius: 4px;
-        transition: background-color 0.3s ease;
-    }
+/* Search Bar Styles */
+.search-bar {
+    background-color: #2a2a2a;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    .sidebar a:hover,
-    .sidebar a.active {
-        background-color: #282828;
-    }
+.search-bar input[type="search"] {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #fff;
+    font-size: 18px;
+}
 
-    /* Search Bar Styles */
-    .search-bar {
-        background-color: #fff;
-        border-radius: 4px;
-        padding: 10px 15px;
-        margin: 20px 0;
-    }
+.search-bar button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    padding: 0 10px;
+    cursor: pointer;
+}
 
-    /* Main Content Tiles */
-    .tile {
-        display: inline-flex;
-        flex-direction: column;
-        width: 150px;
-        margin: 0 10px 20px;
-        text-align: center;
-        color: #fff;
-    }
+.search-title {
+    color: #fff;
+    font-size: 22px;
+    padding-top: 20px;
+}
 
-    .tile img {
-        width: 100%;
-        border-radius: 8px;
-        margin-bottom: 8px;
-    }
+/* Main Content Tiles */
+.tile {
+    display: inline-flex;
+    flex-direction: column;
+    width: 150px;
+    margin: 0 10px 20px;
+    text-align: center;
+    color: #fff;
+}
 
-    .tile .title {
-        font-size: 16px;
-        font-weight: 600;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+.tile img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
 
-    .tile .subtitle {
-        font-size: 12px;
-        color: #b3b3b3;
-    }
+.tile .title {
+    font-size: 16px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-    /* Main Content Section Heading */
-    .content h2 {
-        color: #fff;
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
+.tile .subtitle {
+    font-size: 12px;
+    color: #b3b3b3;
+}
 
-    /* Scrollable Container for Tiles */
-    .scrollable-row {
-        display: flex;
-        overflow-x: auto;
-        padding-bottom: 20px;
-    }
+/* Main Content Section Heading */
+.content h2 {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
 
-    .scrollable-row::-webkit-scrollbar {
-        height: 8px;
-    }
+/* Scrollable Container for Tiles */
+.scrollable-row {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
 
-    .scrollable-row::-webkit-scrollbar-thumb {
-        background-color: #b3b3b3;
-        border-radius: 10px;
-    }
+.scrollable-row::-webkit-scrollbar {
+    height: 8px;
+}
 
-    /* Player Bar Styles */
-    .player {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20px;
-        color: #b3b3b3;
-    }
+.scrollable-row::-webkit-scrollbar-thumb {
+    background-color: #b3b3b3;
+    border-radius: 10px;
+}
 
-    .player .song-info {
-        display: flex;
-        align-items: center;
-    }
+/* Player Bar Styles */
+.player .song-info {
+    display: flex;
+    align-items: center;
+}
 
-    .player img {
-        width: 50px;
-        height: 50px;
-        margin-right: 15px;
-    }
+.player img {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+}
 
-    .player .song-title {
-        font-size: 16px;
-        font-weight: bold;
-    }
+.player .song-title {
+    font-size: 16px;
+    font-weight: bold;
+}
 
-    .player .artist-name {
-        font-size: 14px;
-    }
+.player .artist-name {
+    font-size: 14px;
+}
 
+/* Artist Card Styles */
 .artist-card {
     width: 200px;
     height: 255px;
@@ -254,56 +270,9 @@
     flex-direction: column;
 }
 
-.search-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #2a2a2a;
-    border-radius: 20px;
-    padding: 10px;
-    margin: 0 0px;
-}
-
-.search-bar input[type="search"] {
-    flex-grow: 1;
-    background-color: transparent;
-    border: none;
-    padding-left: 20px;
-    padding-right: 20px;
-    color: #fff;
-    font-size: 18px; /* Increase font size for bigger appearance */
-}
-
-.search-bar button {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 24px;
-    padding: 0 10px;
-    cursor: pointer;
-}
-
-.search-title {
-    color: #fff;
-    font-size: 22px;
-    padding-top: 20px;
-}
-
-/* Sidebar Styles */
-.sidebar {
-    background: #000;
-    width: 250px;
-    height: 100vh;
-    position: fixed;
-    overflow: auto;
-    padding: 9px;
-    display: flex;
-    flex-direction: column;
-}
-
 /* Sidebar Bottom Section Styles */
 .sidebar-section {
-    background: #181818;
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 10px;
     padding: 15px;
     margin-bottom: 9px;
@@ -311,7 +280,7 @@
 }
 
 .sidebar-link {
-    color: #b3b3b3;
+    color: #fff;
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -321,7 +290,7 @@
 
 .sidebar-link:hover,
 .sidebar-link.active {
-    color: #fff;
+    color: #FF6EC7;
 }
 
 .sidebar-link-icon {
@@ -337,7 +306,7 @@
 
 .sidebar-link-subtext {
     margin-left: 10px;
-    background-color: #b3b3b3;
+    background-color: #fff;
     color: #000;
     border-radius: 4px;
     padding: 2px 6px;
@@ -345,15 +314,13 @@
     text-transform: uppercase;
 }
 
-/* Additional styles for other sidebar elements */
-
-/* Additional styles */
+/* Browse All Styles */
 .browse-all {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 115px;
     padding: 10px;
-    background-color: #121212; /* or any other color you prefer */
+    background-color: #121212;
 }
 
 .category-card {
@@ -385,15 +352,14 @@
     margin-bottom: 12px;
 }
 
-/* Add more specific styles for badges if needed */
+/* Browse All Title */
 .browse-all-title {
     font-size: 24px;
     font-weight: bold;
     color: #fff;
-    margin-left: 20px; /* Align with the padding of the grid */
-    padding-top: 20px; /* Space above the title */
+    margin-left: 20px;
+    padding-top: 20px;
 }
-
 
 /* Music Player Container */
 .music-player {
@@ -470,7 +436,6 @@
     font-size: 1.2em;
 }
 
-
 /* Artist Header Styles */
 .artist-header {
     padding: 20px 0;
@@ -519,3 +484,4 @@
     font-size: 18px;
     color: #b3b3b3;
 }
+
