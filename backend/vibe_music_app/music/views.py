@@ -1,19 +1,18 @@
+import requests
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from django.contrib.auth.decorators import login_required
-import requests
-from bs4 import BeautifulSoup as bs
-import re
 
-# Create your views here.
+# Deezer API key
+API_KEY = '83488bb3d8mshef666d0690a738ap100919jsn5f2f918578ce'
+
 def top_artists():
-    url = "https://spotify-scraper.p.rapidapi.com/v1/chart/artists/top"
-
+    url = "https://deezerdevs-deezer.p.rapidapi.com/genre"
     headers = {
-        "X-RapidAPI-Key": "83488bb3d8mshef666d0690a738ap100919jsn5f2f918578ce",
-        "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com"
+        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com"
     }
 
     response = requests.get(url, headers=headers)
@@ -21,21 +20,29 @@ def top_artists():
 
     artists_info = []
 
-    if 'artists' in response_data:
-        for artist in response_data['artists']:
-            name = artist.get('name', 'No Name')
-            avatar_url = artist.get('visuals', {}).get('avatar', [{}])[0].get('url', 'No URL')
-            artist_id = artist.get('id', 'No ID')
-            artists_info.append((name, avatar_url, artist_id))
+    if 'data' in response_data:
+        for genre in response_data['data']:
+            genre_id = genre['id']
+            genre_url = f"https://deezerdevs-deezer.p.rapidapi.com/genre/{genre_id}/artists"
+            genre_response = requests.get(genre_url, headers=headers)
+            genre_artists = genre_response.json()
+
+            if 'data' in genre_artists:
+                for artist in genre_artists['data'][:10]:  # Fetch top 10 artists per genre
+                    name = artist.get('name', 'No Name')
+                    avatar_url = artist.get('picture_medium', 'No URL')
+                    artist_id = artist.get('id', 'No ID')
+                    artists_info.append((name, avatar_url, artist_id))
+            if len(artists_info) >= 10:  # Limit to top 10 artists overall
+                break
 
     return artists_info
 
 def top_tracks():
-    url = "https://spotify-scraper.p.rapidapi.com/v1/chart/tracks/top"
-
+    url = "https://deezerdevs-deezer.p.rapidapi.com/editorial/0"
     headers = {
-        "X-RapidAPI-Key": "83488bb3d8mshef666d0690a738ap100919jsn5f2f918578ce",
-        "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com"
+        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com"
     }
 
     response = requests.get(url, headers=headers)
@@ -43,14 +50,13 @@ def top_tracks():
     track_details = []
 
     if 'tracks' in data:
-        shortened_data = data['tracks'][:18]
+        shortened_data = data['tracks']['data'][:18]
 
-        # id, name, artist, cover url
         for track in shortened_data:
             track_id = track['id']
-            track_name = track['name']
-            artist_name = track['artists'][0]['name'] if track['artists'] else None
-            cover_url = track['album']['cover'][0]['url'] if track['album']['cover'] else None
+            track_name = track['title']
+            artist_name = track['artist']['name']
+            cover_url = track['album']['cover_medium']
 
             track_details.append({
                 'id': track_id,
@@ -59,95 +65,38 @@ def top_tracks():
                 'cover_url': cover_url
             })
 
-    else:
-        print("track not found in response")
-
     return track_details
 
-def get_audio_details(query):
-    url = "https://spotify-scraper.p.rapidapi.com/v1/track/download"
-
-    querystring = {"track": query}
-
-    headers = {
-        "X-RapidAPI-Key": "83488bb3d8mshef666d0690a738ap100919jsn5f2f918578ce",
-        "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com"
-    }
-
-    response = requests.get(url, headers=headers, params=querystring)
-    audio_details = []
-
-    if response.status_code == 200:
-        response_data = response.json()
-
-        if 'youtubeVideo' in response_data and 'audio' in response_data['youtubeVideo']:
-            audio_list = response_data['youtubeVideo']['audio']
-            if audio_list:
-                first_audio_url = audio_list[0]['url']
-                duration_text = audio_list[0]['durationText']
-
-                audio_details.append(first_audio_url)
-                audio_details.append(duration_text)
-            else:
-                print("No audio data availble")
-        else:
-            print("No 'youtubeVideo' or 'audio' key found")
-    else:
-        print("Failed to fetch data")
-
-    return audio_details
-
 def get_track_image(track_id, track_name):
-    url = 'https://open.spotify.com/track/'+track_id
-    r = requests.get(url)
-    soup = bs(r.content)
-    image_links_html = soup.find('img', {'alt': track_name})
-    if image_links_html:
-        image_links = image_links_html['srcset']
-    else:
-        image_links = ''
-
-    match = re.search(r'https:\/\/i\.scdn\.co\/image\/[a-zA-Z0-9]+ 640w', image_links)
-
-    if match:
-        url_640w = match.group().rstrip(' 640w')
-    else:
-        url_640w = ''
-
-    return url_640w
+    track_url = f"https://deezerdevs-deezer.p.rapidapi.com/track/{track_id}"
+    headers = {
+        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com"
+    }
+    response = requests.get(track_url, headers=headers)
+    data = response.json()
+    return data.get('album', {}).get('cover_medium', '')
 
 def music(request, pk):
     track_id = pk
-
-    url = "https://spotify-scraper.p.rapidapi.com/v1/track/metadata"
-
-    querystring = {"trackId":"5ubHAQtKuFfiG4FXfLP804"}
-
+    url = f"https://deezerdevs-deezer.p.rapidapi.com/track/{track_id}"
     headers = {
-        "X-RapidAPI-Key": "83488bb3d8mshef666d0690a738ap100919jsn5f2f918578ce",
-        "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com"
+        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com"
     }
-
-    response = requests.get(url, headers=headers, params=querystring)
+    response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
         data = response.json()
-        # extrack track_name, artist_name
-
-        track_name = data.get("name")
-        artists_list = data.get("artists", [])
-        first_artist_name = artists_list[0].get("name") if artists_list else "No artist found"
-
-        audio_details_query = track_name + first_artist_name
-        audio_details = get_audio_details(audio_details_query)
-        audio_url = audio_details[0]
-        duration_text = audio_details[1]
-
+        track_name = data.get("title")
+        artist_name = data.get("artist", {}).get("name", "No artist found")
+        audio_url = data.get("preview")
+        duration_text = data.get("duration")
         track_image = get_track_image(track_id, track_name)
 
         context = {
             'track_name': track_name,
-            'artist_name': first_artist_name,
+            'artist_name': artist_name,
             'audio_url': audio_url,
             'duration_text': duration_text,
             'track_image': track_image,
@@ -161,14 +110,12 @@ def index(request):
     artists_info = top_artists()
     top_track_list = top_tracks()
 
-    # divide the list into three parts
     first_six_tracks = top_track_list[:6]
     second_six_tracks = top_track_list[6:12]
     third_six_tracks = top_track_list[12:18]
 
-    print(top_track_list)
     context = {
-        'artists_info' : artists_info,
+        'artists_info': artists_info,
         'first_six_tracks': first_six_tracks,
         'second_six_tracks': second_six_tracks,
         'third_six_tracks': third_six_tracks,
@@ -178,47 +125,37 @@ def index(request):
 def search(request):
     if request.method == 'POST':
         search_query = request.POST['search_query']
-
-        url = "https://spotify-scraper.p.rapidapi.com/v1/search"
-
-        querystring = {"term":search_query,"type":"track"}
-
+        url = "https://deezerdevs-deezer.p.rapidapi.com/search"
+        querystring = {"q": search_query}
         headers = {
-            "X-RapidAPI-Key": "83488bb3d8mshef666d0690a738ap100919jsn5f2f918578ce",
-            "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com"
+            "X-RapidAPI-Key": API_KEY,
+            "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com"
         }
 
         response = requests.get(url, headers=headers, params=querystring)
-
         track_list = []
 
         if response.status_code == 200:
             data = response.json()
-
-            search_results_count = data["tracks"]["totalCount"]
-            tracks = data["tracks"]["items"]
+            tracks = data["data"]
 
             for track in tracks:
-                track_name = track["name"]
-                artist_name = track["artists"][0]["name"]
-                duration = track["durationText"]
-                trackid = track["id"]
-
-                if get_track_image(trackid, track_name):
-                    track_image = get_track_image(trackid, track_name)
-                else:
-                    track_image = "https://imgv3.fotor.com/images/blog-richtext-image/music-of-the-spheres-album-cover.jpg"
+                track_name = track["title"]
+                artist_name = track["artist"]["name"]
+                duration = track["duration"]
+                track_id = track["id"]
+                track_image = get_track_image(track_id, track_name)
 
                 track_list.append({
                     'track_name': track_name,
                     'artist_name': artist_name,
                     'duration': duration,
-                    'trackid': trackid,
+                    'trackid': track_id,
                     'track_image': track_image,
                 })
 
             context = {
-                'search_results_count': search_results_count,
+                'search_results_count': len(tracks),
                 'track_list': track_list,
             }
 
@@ -228,44 +165,39 @@ def search(request):
 
 def profile(request, pk):
     artist_id = pk
-
-    url = "https://spotify-scraper.p.rapidapi.com/v1/artist/overview"
-
-    querystring = {"artistId": artist_id}
-
+    url = f"https://deezerdevs-deezer.p.rapidapi.com/artist/{artist_id}"
     headers = {
-        "X-RapidAPI-Key": "83488bb3d8mshef666d0690a738ap100919jsn5f2f918578ce",
-        "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com"
+        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com"
     }
-
-    response = requests.get(url, headers=headers, params=querystring)
+    response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
         data = response.json()
-
         name = data["name"]
-        monthly_listeners = data["stats"]["monthlyListeners"]
-        header_url = data["visuals"]["header"][0]["url"]
+        monthly_listeners = data["nb_fan"]
+        header_url = data["picture_xl"]
 
         top_tracks = []
+        top_tracks_url = f"https://deezerdevs-deezer.p.rapidapi.com/artist/{artist_id}/top?limit=10"
+        tracks_response = requests.get(top_tracks_url, headers=headers)
+        tracks_data = tracks_response.json()
 
-        for track in data["discography"]["topTracks"]:
-            trackid = str(track["id"])
-            trackname = str(track["name"])
-            if get_track_image(trackid, trackname):
-                trackimage = get_track_image(trackid, trackname)
-            else:
-                trackimage = "https://imgv3.fotor.com/images/blog-richtext-image/music-of-the-spheres-album-cover.jpg"
+        if 'data' in tracks_data:
+            for track in tracks_data['data']:
+                track_id = track["id"]
+                track_name = track["title"]
+                track_image = get_track_image(track_id, track_name)
 
-            track_info = {
-                "id": track["id"],
-                "name": track["name"],
-                "durationText": track["durationText"],
-                "playCount": track["playCount"],
-                "track_image": trackimage
-            }
+                track_info = {
+                    "id": track["id"],
+                    "name": track["title"],
+                    "durationText": track["duration"],
+                    "playCount": track["rank"],
+                    "track_image": track_image
+                }
 
-            top_tracks.append(track_info)
+                top_tracks.append(track_info)
 
         artist_data = {
             "name": name,
@@ -312,7 +244,6 @@ def signup(request):
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user.save()
 
-                # log user in
                 user_login = auth.authenticate(username=username, password=password)
                 auth.login(request, user_login)
                 return redirect('/')
