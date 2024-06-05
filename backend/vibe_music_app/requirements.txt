@@ -131,3 +131,4 @@ werkzeug==3.0.2
 whitenoise==6.6.0
 zipp==1.0.0
 zope.interface==4.7.1
+psycopg2>=2.8
