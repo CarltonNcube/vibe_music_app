@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 API_KEY = '83488bb3d8mshef666d0690a738ap100919jsn5f2f918578ce'
 
 def top_artists():
-    url = "https://deezerdevs-deezer.p.rapidapi.com/genre"
+    # url = "https://deezerdevs-deezer.p.rapidapi.com/chart/0/artists"
+    url = "https://deezerdevs-deezer.p.rapidapi.com/artist/%7Bid%7D"
     headers = {
         "X-RapidAPI-Key": API_KEY,
         "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com"
@@ -17,29 +18,21 @@ def top_artists():
 
     response = requests.get(url, headers=headers)
     response_data = response.json()
+    print(f"Response Data: {response_data}")
 
     artists_info = []
 
     if 'data' in response_data:
-        for genre in response_data['data']:
-            genre_id = genre['id']
-            genre_url = f"https://deezerdevs-deezer.p.rapidapi.com/genre/{genre_id}/artists"
-            genre_response = requests.get(genre_url, headers=headers)
-            genre_artists = genre_response.json()
-
-            if 'data' in genre_artists:
-                for artist in genre_artists['data'][:10]:  # Fetch top 10 artists per genre
-                    name = artist.get('name', 'No Name')
-                    avatar_url = artist.get('picture_medium', 'No URL')
-                    artist_id = artist.get('id', 'No ID')
-                    artists_info.append((name, avatar_url, artist_id))
-            if len(artists_info) >= 10:  # Limit to top 10 artists overall
-                break
+        for artist in response_data['data']:
+            name = artist.get('name', 'No Name')
+            avatar_url = artist.get('picture_medium', 'No URL')
+            artist_id = artist.get('id', 'No ID')
+            artists_info.append((name, avatar_url, artist_id))
 
     return artists_info
 
 def top_tracks():
-    url = "https://deezerdevs-deezer.p.rapidapi.com/editorial/0"
+    url = "https://deezerdevs-deezer.p.rapidapi.com/chart/0/tracks"
     headers = {
         "X-RapidAPI-Key": API_KEY,
         "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com"
@@ -257,4 +250,3 @@ def signup(request):
 def logout(request):
     auth.logout(request)
     return redirect('login')
-
