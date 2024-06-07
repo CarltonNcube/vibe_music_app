@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-
 
 from backend.vibe_music_app.vibe_music_app.settings import BASE_DIR
 
@@ -27,7 +25,7 @@ from backend.vibe_music_app.vibe_music_app.settings import BASE_DIR
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-z5+9(s5g!i%(0!dwluq!&b(9$vhjh%m!tpvlemz4&1vd=1c0h)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -81,25 +79,21 @@ WSGI_APPLICATION = 'vibe_music_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# Load environment variables from .env
-load_dotenv()
+# Initialize environment variables
+# env = environ.Env()
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-DEBUG = True 
-ALLOWED_HOSTS = []
-
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': 'vibemusic_db',
+        'USER': 'root',
+        'PASSWORD': 'alxfinalproject',
+        'HOST': 'localhost',
+        'PORT': 5432
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
