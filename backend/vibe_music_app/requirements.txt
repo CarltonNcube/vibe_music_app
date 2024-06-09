@@ -91,7 +91,6 @@ pyOpenSSL
 pyparsing
 pyrsistent
 pyserial
-python-apt
 python-dateutil
 python-debian
 python-dotenv
