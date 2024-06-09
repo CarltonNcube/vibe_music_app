@@ -13,7 +13,6 @@ certifi
 chardet
 charset-normalizer
 click
-cloud-init
 colorama
 configobj
 constantly
