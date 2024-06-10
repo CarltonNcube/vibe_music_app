@@ -1,0 +1,53 @@
+vibe_music_app/
+├── Dockerfile
+├── db.sqlite3
+├── manage.py
+├── music/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── migrations/
+│   │   ├── __init__.py
+│   │   └── (other migration files)
+│   ├── models.py
+│   ├── tests/
+│   │   ├── __init__.py
+│   │   ├── test_models.py
+│   │   ├── test_templates.py
+│   │   ├── test_urls.py
+│   │   ├── test_views.py
+│   │   └── (additional test files)
+│   ├── urls.py
+│   ├── views.py
+│   ├── api_views.py
+│   └── serializers.py
+├── psql/
+│   └── (psql related files)
+├── requirements.txt
+├── settings.py
+├── static/
+│   ├── css/
+│   │   ├── profile-style.css
+│   │   ├── search-style.css
+│   │   └── style.css
+│   ├── js/
+│   │   └── (JavaScript files)
+│   └── images/
+│       └── (image files)
+├── staticfiles/
+│   └── (collected static files for deployment)
+├── templates/
+│   ├── index.html
+│   ├── login.html
+│   ├── music.html
+│   ├── profile.html
+│   ├── search.html
+│   └── signup.html
+├── vibe_music_app/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+
+
